@@ -640,14 +640,14 @@
 
                 reader.onload = function (e) {
                     const arrayBuffer = e.target.result;
-                    // Proses array buffer menggunakan  xlsx
+                    // Read Excel
                     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
 
-                    // Ambil worksheet pertama
+                    // First worksheet
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
 
-                    // Ubah data worksheet menjadi array JavaScript
+                    // Sheet to JSON
                     const data = XLSX.utils.sheet_to_json(worksheet);
 
                     // Merge data to label component
@@ -660,7 +660,7 @@
                         label_merge.push(label_merge_prep);
                     }
 
-                    // Find QR Code
+                    // Get QR Code
                     for (var k = 0; k < label_merge.length; k++) {
                         for (var l = 0; l < label_merge[k].length; l++) {
                             if (label_merge[k][l].type === "qr") {
@@ -775,7 +775,6 @@
             let centerX = stage.width() / 2;
             let centerY = stage.height() / 2;
 
-            // let dataURL = layer.toDataURL();
             let dataURL = layer.toDataURL({
                 x: centerX - (parseFloat(width) * 3.7795275591),
                 y: centerY - (parseFloat(height) * 3.7795275591),
