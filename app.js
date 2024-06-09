@@ -65,13 +65,13 @@ app.get('/', (req, res) => {
     }
 
     // Check Directory
-    if (fs.existsSync(path.join('C:', 'ETTERLabel'))) {
+    if (fs.existsSync(path.join('C:', 'InfinityLabel'))) {
         // Exist
         // Do Nothing
     } else {
         // Doesn't Exist
         // Create Folder
-        fs.mkdir(path.join('C:', 'ETTERLabel'), function (res) {
+        fs.mkdir(path.join('C:', 'InfinityLabel'), function (res) {
             // console.log(res);
         });
     }
@@ -87,7 +87,7 @@ app.post('/label_create', jsonParser, (req, res) => {
     var appendData = JSON.stringify(data);
     var file_name = data[0].file.name;
 
-    if (fs.existsSync(path.join('C:', 'ETTERLabel', file_name))) {
+    if (fs.existsSync(path.join('C:', 'InfinityLabel', file_name))) {
         res.status(200).json({
             type: 0,
             message: 'File Exist!'
@@ -95,7 +95,7 @@ app.post('/label_create', jsonParser, (req, res) => {
     } else {
         // Doesn't Exist
         // Create File
-        fs.writeFile(path.join('C:', 'ETTERLabel', file_name), appendData, (err) => {
+        fs.writeFile(path.join('C:', 'InfinityLabel', file_name), appendData, (err) => {
             if (err) {
                 return res.status(500).json({
                     type: 0,
@@ -115,7 +115,7 @@ app.get('/editor/:file', (req, res) => {
     var file_name = req.params.file;
 
     // Read File
-    fs.readFile(path.join('C:', 'ETTERLabel', file_name), 'utf8', (err, data) => {
+    fs.readFile(path.join('C:', 'InfinityLabel', file_name), 'utf8', (err, data) => {
         if (err) {
             console.error(err);
         } else {
@@ -142,7 +142,7 @@ app.post('/design_update', textParser, (req, res) => {
     var appendData = component;
     var file_name = info.file.name;
 
-    fs.writeFile(path.join('C:', 'ETTERLabel', file_name), appendData, (err) => {
+    fs.writeFile(path.join('C:', 'InfinityLabel', file_name), appendData, (err) => {
         if (err) {
             return res.status(500).json({
                 type: 0,
@@ -158,7 +158,7 @@ app.post('/design_update', textParser, (req, res) => {
 });
 
 app.get('/projects', (req, res) => {
-    const directoryPath = path.join('C:', 'ETTERLabel');
+    const directoryPath = path.join('C:', 'InfinityLabel');
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
             return res.status(500).json({
@@ -202,7 +202,7 @@ app.post('/savepng', textParser, async (req, res) => {
     // Create a unique filename
     // const filename = `image-${Date.now()}.png`;
 
-    const filePath = path.join("C:", 'ETTERLabel', 'canvas.png');
+    const filePath = path.join("C:", 'InfinityLabel', 'canvas.png');
 
     fs.writeFile(filePath, base64Data, 'base64', (err) => {
         if (err) {
