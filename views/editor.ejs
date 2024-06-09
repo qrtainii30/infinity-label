@@ -32,19 +32,16 @@
                     <a class="nav-link" href="javascript:void(0)" role="button" id="exportCanvas"><i class="fa fa-file-image"></i></a>
                 </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-text"><i class=" fa fa-font"></i></a>
+                    <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-text" title="Add Text"><i class=" fa fa-font"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-qr"><i class="fa fa-qrcode"></i></a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button"><i class="fa fa-barcode"></i></a>
-                </li> -->
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-excel-load"><i class="fa fa-table"></i></a>
+                    <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-qr" title="Add QR"><i class="fa fa-qrcode"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-print"><i class="fa fa-print"></i></a>
+                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-excel-load" title="Load Excel"><i class="fa fa-table"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-print" title="Print"><i class="fa fa-print"></i></a>
                 </li>
             </ul>
 
@@ -82,14 +79,7 @@
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="component-list">
-                        <!-- <li class="nav-item">
-                            <a href="javascript:void(0)" class="nav-link" style="padding-top: 10.5px;">
-                                nama_component
-                                <span class="right pt-0"><i class="fa fa-trash"></i></span>
-                            </a>
-                        </li> -->
-                    </ul>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="component-list"></ul>
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
@@ -192,10 +182,12 @@
         var width = Number(design[0].file.width);
         var height = Number(design[0].file.height);
 
+        var width_section = $(document).find('#content').width() - 10;
+
         let stage = new Konva.Stage({
             container: 'canvas',
-            width: window.innerWidth,
-            height: window.innerHeight,
+            width: width_section,
+            height: window.innerHeight - 100,
         });
 
         let layer = new Konva.Layer();
@@ -703,6 +695,8 @@
         });
 
         $(document).on('click', '#btn-print', function () {
+            var width_section = $(document).find('#content').width() - 10;
+
             if (label_merge.length === 0) {
                 alert('Choose Excel Data Before Print!');
             } else {
@@ -716,8 +710,8 @@
 
                     let stage = new Konva.Stage({
                         container: 'canvas',
-                        width: window.innerWidth,
-                        height: window.innerHeight,
+                        width: width_section,
+                        height: window.innerHeight - 100,
                     });
 
                     let layer = new Konva.Layer();
