@@ -31,9 +31,6 @@
                 <!-- <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" id="exportCanvas"><i class="fa fa-file-image"></i></a>
                 </li> -->
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button"><i class="fa fa-print"></i></a>
-                </li> -->
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-text"><i class=" fa fa-font"></i></a>
                 </li>
@@ -45,6 +42,9 @@
                 </li> -->
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" id="btn-excel-load"><i class="fa fa-table"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-print"><i class="fa fa-print"></i></a>
                 </li>
             </ul>
 
@@ -700,6 +700,89 @@
 
                 reader.readAsArrayBuffer(file);
             });
+        });
+
+        $(document).on('click', '#btn-print', function () {
+            if (label_merge.length === 0) {
+                alert('Choose Excel Data Before Print!');
+            } else {
+                for (var i = 0; i < label_merge.length; i++) {
+                    $(document).find('#canvas').html('');
+
+                    var design = JSON.parse(decodedDesign.slice(1, -1));
+                    var width = Number(design[0].file.width);
+                    var height = Number(design[0].file.height);
+
+
+                    let stage = new Konva.Stage({
+                        container: 'canvas',
+                        width: window.innerWidth,
+                        height: window.innerHeight,
+                    });
+
+                    let layer = new Konva.Layer();
+
+                    stage.add(layer);
+
+                    let centerX = stage.width() / 2;
+                    let centerY = stage.height() / 2;
+
+                    var Label = new Konva.Rect({
+                        x: centerX - (parseFloat(width) * 3.7795275591),
+                        y: centerY - (parseFloat(height) * 3.7795275591),
+                        width: parseFloat(width) * 3.7795275591, //konversi mm ke px
+                        height: parseFloat(height) * 3.7795275591,
+                        fill: 'white',
+                        stroke: 'lightgray',
+                        strokeWidth: 1,
+                        name: 'base_layout'
+                    });
+
+                    layer.add(Label);
+                    layer.draw();
+
+                    for (var j = 0; j < label_merge[i].length; j++) {
+                        if (label_merge[i][j].type === "text") {
+                            var text = new Konva.Text({
+                                x: label_merge[i][j].x,
+                                y: label_merge[i][j].y,
+                                text: label_merge[i][j].text,
+                                fontSize: label_merge[i][j].fontSize,
+                                draggable: false,
+                                name: label_merge[i][j].name,
+                                type: "text"
+                            });
+
+                            layer.add(text);
+                        }
+
+                        if (label_merge[i][j].type === "qr") {
+                            var x = label_merge[i][j].x;
+                            var y = label_merge[i][j].y;
+                            var height = Number(label_merge[i][j].height);
+                            var width = Number(label_merge[i][j].width);
+                            var name = label_merge[i][j].name;
+
+                            var imageObj = new Image();
+                            imageObj.onload = function () {
+                                var qr = new Konva.Image({
+                                    x: x,
+                                    y: y,
+                                    image: imageObj,
+                                    width: width,
+                                    height: height,
+                                    draggable: true,
+                                    name: name,
+                                    type: "qr"
+                                });
+
+                                layer.add(qr);
+                            };
+                            imageObj.src = label_merge[i][j].text;
+                        }
+                    }
+                }
+            }
         });
     </script>
 </body>
