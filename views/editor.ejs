@@ -2,22 +2,7 @@
 <html lang="en">
 
 <head>
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; 
-    style-src * 'unsafe-inline'; 
-    script-src * 'unsafe-inline' 'unsafe-eval'; 
-    img-src * data: 'unsafe-inline'; 
-    font-src * 'unsafe-inline' 'unsafe-eval' data:; 
-    connect-src * 'unsafe-inline'; 
-    frame-src *; 
-    media-src *;"> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline';
-    style-src * 'unsafe-inline';
-    script-src * 'unsafe-inline' 'unsafe-eval';
-    img-src 'self' data: 'unsafe-inline';
-    font-src * 'unsafe-inline' 'unsafe-eval' data:;
-    connect-src 'self';
-    frame-src 'self';
-    media-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline';style-src * 'unsafe-inline';script-src * 'unsafe-inline' 'unsafe-eval';img-src 'self' data: 'unsafe-inline';font-src * 'unsafe-inline' 'unsafe-eval' data:;connect-src 'self';frame-src 'self';media-src 'self';">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -43,23 +28,23 @@
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" id="exportCanvas"><i class="fa fa-file-image"></i></a>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button"><i class="fa fa-print"></i></a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-text"><i class=" fa fa-font"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button"><i class="fa fa-barcode"></i></a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-qr"><i class="fa fa-qrcode"></i></a>
                 </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" role="button"><i class="fa fa-barcode"></i></a>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button" id="uploadButton"><i class="fa fa-table"></i></a>
+                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-excel-load"><i class="fa fa-table"></i></a>
                 </li>
             </ul>
 
@@ -84,7 +69,7 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- SidebarSearch Form -->
-                <div class="form-inline mt-2">
+                <!-- <div class="form-inline mt-2">
                     <div class="input-group" data-widget="sidebar-search">
                         <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
                         <div class="input-group-append">
@@ -93,19 +78,17 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa-solid fa-font"></i>
-                                <p>
-                                    Label
-                                </p>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="component-list">
+                        <!-- <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link" style="padding-top: 10.5px;">
+                                nama_component
+                                <span class="right pt-0"><i class="fa fa-trash"></i></span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -256,7 +239,7 @@
             transformer.destroy();
 
             transformer = new Konva.Transformer();
-  
+
             if (evt.target.attrs.name !== "base_layout") {
                 layer.add(transformer);
                 transformer.attachTo(evt.target).rotateEnabled(false);
@@ -303,6 +286,13 @@
                     };
                     imageObj.src = design[0].label[i].text;
                 }
+
+                $(document).find('#component-list').append(`<li class="nav-item">
+                                                                <a href="javascript:void(0)" class="nav-link">
+                                                                    <i class="nav-icon fa fa-circle"></i>
+                                                                    <p>`+ design[0].label[i].name + `</p>
+                                                                </a>
+                                                            </li>`);
             }
             layer.draw();
         }
@@ -531,8 +521,10 @@
             });
         });
 
+        var objects = null;
+
         setTimeout(function () {
-            var objects = layer.children;
+            objects = layer.children;
 
             objects.forEach(function (obj) {
                 obj.on('dragmove', function () {
@@ -605,11 +597,6 @@
                         }
                     }
 
-                    console.log(design);
-
-                    console.log(width_new.toFixed(0));
-                    console.log(height_new.toFixed(0));
-
                     var data = JSON.stringify(design);
 
                     var settings = {
@@ -628,6 +615,92 @@
                 });
             });
         }, 3000);
+
+        var label_merge = [];
+
+        function updateTemplateWithInput(inputData, template) {
+            // Create a new object based on the template to avoid mutating the original template
+            let updatedTemplate = { ...template };
+
+            // Check if the attribute in the template exists in the input data
+            if (inputData.hasOwnProperty(updatedTemplate.attribute)) {
+                // Update the text field in the template with the value from the input data
+                updatedTemplate.text = inputData[updatedTemplate.attribute];
+            }
+
+            return updatedTemplate;
+        }
+
+        $(document).on('click', '#btn-excel-load', function () {
+            const excelFile = document.createElement('input');
+            excelFile.type = 'file';
+            excelFile.accept = '.xlsx';
+            excelFile.style.display = 'none';
+
+            excelFile.click();
+
+            excelFile.addEventListener('change', function (event) {
+                label_merge = [];
+
+                const file = event.target.files[0];
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const arrayBuffer = e.target.result;
+                    // Proses array buffer menggunakan  xlsx
+                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+                    // Ambil worksheet pertama
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+
+                    // Ubah data worksheet menjadi array JavaScript
+                    const data = XLSX.utils.sheet_to_json(worksheet);
+
+                    // Merge data to label component
+                    for (var i = 0; i < data.length; i++) {
+                        var label_merge_prep = [];
+                        for (var j = 0; j < design[0].label.length; j++) {
+                            const updatedTemplate = updateTemplateWithInput(data[i], design[0].label[j]);
+                            label_merge_prep.push(updatedTemplate);
+                        }
+                        label_merge.push(label_merge_prep);
+                    }
+
+                    // Find QR Code
+                    for (var k = 0; k < label_merge.length; k++) {
+                        for (var l = 0; l < label_merge[k].length; l++) {
+                            if (label_merge[k][l].type === "qr") {
+                                var iter_k = k;
+                                var before_generate = label_merge[k][l];
+                                var to_generate = JSON.stringify(label_merge[k][l]);
+
+                                var settings = {
+                                    "url": "http://localhost:3000/qrgen",
+                                    "method": "POST",
+                                    "timeout": 0,
+                                    "headers": {
+                                        "Content-Type": "text/plain"
+                                    },
+                                    "data": to_generate,
+                                    "async": false
+                                };
+
+                                var qr = "";
+                                $.ajax(settings).done(function (response) {
+                                    qr = response;
+                                });
+
+                                label_merge[k][l].text = qr;
+                            }
+                        }
+                    }
+                };
+
+                reader.readAsArrayBuffer(file);
+            });
+        });
     </script>
 </body>
 
