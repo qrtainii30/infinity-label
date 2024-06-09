@@ -28,9 +28,6 @@
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" role="button" id="exportCanvas"><i class="fa fa-file-image"></i></a>
-                </li> -->
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" data-toggle="modal" data-target="#new-text" title="Add Text"><i class=" fa fa-font"></i></a>
                 </li>
@@ -42,6 +39,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" id="btn-print" title="Print"><i class="fa fa-print"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-save-png" title="Download PNG"><i class="fa fa-download"></i></a>
                 </li>
             </ul>
 
@@ -777,6 +777,36 @@
                     }
                 }
             }
+        });
+
+        $(document).on('click', '#btn-save-png', function () {
+            var width = Number(design[0].file.width);
+            var height = Number(design[0].file.height);
+
+            let centerX = stage.width() / 2;
+            let centerY = stage.height() / 2;
+
+            // let dataURL = layer.toDataURL();
+            let dataURL = stage.toDataURL({
+                x: centerX - (parseFloat(width) * 3.7795275591),
+                y: centerY - (parseFloat(height) * 3.7795275591),
+                width: parseFloat(width) * 3.7795275591,
+                height: parseFloat(height) * 3.7795275591
+            });
+
+            var settings = {
+                "url": "http://localhost:3000/savepng",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "text/plain"
+                },
+                "data": dataURL
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            });
         });
     </script>
 </body>

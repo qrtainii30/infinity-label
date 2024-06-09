@@ -195,11 +195,22 @@ app.post('/qrgen', textParser, async (req, res) => {
     res.status(200).json(qrCodeImage);
 });
 
-app.listen(process.env.port || 3000);
+app.post('/savepng', textParser, async (req, res) => {
+    const dataURL = req.body;
+    const base64Data = dataURL.replace(/^data:image\/png;base64,/, '');
 
-// function formatDate(date) {
-//     const year = date.getFullYear();
-//     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-//     const day = String(date.getDate()).padStart(2, '0');
-//     return `${year}_${month}_${day}`;
-// }
+    // Create a unique filename
+    // const filename = `image-${Date.now()}.png`;
+
+    const filePath = path.join("C:", 'ETTERLabel', 'canvas.png');
+
+    fs.writeFile(filePath, base64Data, 'base64', (err) => {
+        if (err) {
+            res.status(500).send('Error saving PNG');
+        } else {
+            res.send('PNG saved successfully');
+        }
+    });
+});
+
+app.listen(process.env.port || 3000);
