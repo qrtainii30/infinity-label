@@ -1,2 +1,2 @@
-# infinity-label
-Infinity Label Designer for Export and Print
+# Infinity Kavek
+Simple and Easy tool for designing label and print.
