@@ -701,22 +701,11 @@
                 alert('Choose Excel Data Before Print!');
             } else {
                 for (var i = 0; i < label_merge.length; i++) {
-                    $(document).find('#canvas').html('');
+                    layer.clear();
 
                     var design = JSON.parse(decodedDesign.slice(1, -1));
                     var width = Number(design[0].file.width);
                     var height = Number(design[0].file.height);
-
-
-                    let stage = new Konva.Stage({
-                        container: 'canvas',
-                        width: width_section,
-                        height: window.innerHeight - 100,
-                    });
-
-                    let layer = new Konva.Layer();
-
-                    stage.add(layer);
 
                     let centerX = stage.width() / 2;
                     let centerY = stage.height() / 2;
@@ -787,7 +776,7 @@
             let centerY = stage.height() / 2;
 
             // let dataURL = layer.toDataURL();
-            let dataURL = stage.toDataURL({
+            let dataURL = layer.toDataURL({
                 x: centerX - (parseFloat(width) * 3.7795275591),
                 y: centerY - (parseFloat(height) * 3.7795275591),
                 width: parseFloat(width) * 3.7795275591,
