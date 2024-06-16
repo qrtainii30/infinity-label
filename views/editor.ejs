@@ -43,6 +43,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0)" role="button" id="btn-save-png" title="Download PNG"><i class="fa fa-download"></i></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)" role="button" id="btn-delete-component" title="Delete component" style="display: none;"><i class="fa-solid fa-trash"></i></a>
+                </li>
             </ul>
 
             <!-- Right navbar links -->
@@ -227,14 +230,24 @@
         layer.add(transformer);
 
         // Transformer Attach Shape
+        var selectedShape = null;
         layer.on('click tap', function (evt) {
             transformer.destroy();
 
             transformer = new Konva.Transformer();
 
+            // transformer.detach();
+
             if (evt.target.attrs.name !== "base_layout") {
+                selectedShape = evt.target;
                 layer.add(transformer);
                 transformer.attachTo(evt.target).rotateEnabled(false);
+                // $('#btn-delete-component').removeClass('disabled');
+                $('#btn-delete-component').show();
+            } else {
+                selectedShape = null;
+                // $('#btn-delete-component').addClass('disabled');
+                $('#btn-delete-component').hide();
             }
         });
 
@@ -494,7 +507,7 @@
                 };
 
                 $.ajax(settings).done(function (response) {
-                    // Do Nothing
+                    window.location.reload();
                 });
 
                 var imageObj = new Image();
@@ -795,6 +808,57 @@
             $.ajax(settings).done(function (response) {
                 console.log(response);
             });
+        });
+
+        $(document).on('click', '#btn-delete-component', function (event) {
+            event.preventDefault();
+
+            // if (!selectedShape) {
+            //     alert('Please select a component to delete');
+            //     return;
+            // }
+
+            var componentName = selectedShape.name();
+            var deleteConfirmed = confirm('Remove this compoenent "' + componentName + '" ?');
+            var fileName = design[0].file.name;
+
+            if (deleteConfirmed) {
+                var shape = stage.findOne('.' + componentName);
+                if (shape) {
+                    if (design && design.length > 0) {
+                        for (var i = 0; i < design[0].label.length; i++) {
+                            if (design[0].label[i].name === componentName) {
+                                design[0].label.splice(i, 1);
+                                // console.log(componentName + ' Removed!');
+                                break;
+                            }
+                        }
+                    }
+
+                    // Component detach
+                    shape.destroy();
+                    transformer.detach();
+                    layer.draw();
+
+                    selectedShape = null;
+
+                    var data = JSON.stringify(design);
+
+                    var settings = {
+                        "url": "http://localhost:3000/design_update",
+                        "method": "POST",
+                        "timeout": 0,
+                        "headers": {
+                            "Content-Type": "text/plain"
+                        },
+                        "data": data,
+                    };
+
+                    $.ajax(settings).done(function (response) {
+                        console.log(response);
+                    });
+                }
+            }
         });
     </script>
 </body>

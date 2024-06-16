@@ -7,6 +7,7 @@ function createWindow() {
     win = new BrowserWindow({
         width: 1080,
         height: 600,
+        title: "Infinity Label",
         webPreferences: {
             nodeIntegration: true
         }
