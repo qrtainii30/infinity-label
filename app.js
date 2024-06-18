@@ -213,4 +213,30 @@ app.post('/savepng', textParser, async (req, res) => {
     });
 });
 
+app.post('/delete_project', jsonParser, (req, res) => {
+    const projectName = req.body.projectName;
+    const filePath = path.join('C:', 'InfinityLabel', projectName);
+
+    if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({
+                    type: 0,
+                    message: 'Failed to delete'
+                });
+            }
+            res.status(200).json({
+                type: 1,
+                message: 'Project has been deleted'
+            });
+        });
+    } else {
+        res.status(404).json({
+            type: 0,
+            message: 'Project not found'
+        });
+    }
+});
+
 app.listen(process.env.port || 3000);
