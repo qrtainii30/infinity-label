@@ -1,5 +1,9 @@
 const { app, BrowserWindow } = require('electron');
+const { updateElectronApp } = require('update-electron-app');
+
 require('./app');
+
+updateElectronApp();
 
 let win;
 

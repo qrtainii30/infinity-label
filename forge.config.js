@@ -46,11 +46,10 @@ module.exports = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'taufiksu',
+          owner: 'imboost',
           name: 'infinity-label'
         },
-        prerelease: true,
-        draft: true
+        prerelease: true
       }
     }
   ]
