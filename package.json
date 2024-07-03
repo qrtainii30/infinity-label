@@ -36,6 +36,11 @@
     "electron-squirrel-startup": "^1.0.1",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "update-electron-app": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imboost/infinity-label.git"
   }
 }
