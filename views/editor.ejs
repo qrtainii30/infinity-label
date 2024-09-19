@@ -853,9 +853,19 @@
                         },
                         "data": data,
                     };
-
+                    
+                    $(document).find('#component-list').html('');
                     $.ajax(settings).done(function (response) {
                         console.log(response);
+                        for (var i = 0; i < design[0].label.length; i++) {
+                            $(document).find('#component-list').append(`<li class="nav-item">
+                                                                <a href="javascript:void(0)" class="nav-link">
+                                                                    <i class="nav-icon fa fa-circle"></i>
+                                                                    <p>`+ design[0].label[i].name + `</p>
+                                                                </a>
+                                                            </li>`);
+                        }
+                        
                     });
                 }
             }
